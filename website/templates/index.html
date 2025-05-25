@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Welcome to Paper Date Guesser{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="homepage">
+    <section class="intro">
+        <h2>Test Your Knowledge of Research Trends</h2>
+        <p>Paper Date Guesser challenges you to guess when research papers were published based only on their abstracts. How well can you identify the era of scientific research?</p>
+        
+        <div class="cta-buttons">
+            <a href="{{ url_for('game.game') }}" class="btn primary">Play Now</a>
+            <a href="{{ url_for('leaderboard') }}" class="btn secondary">View Leaderboard</a>
+        </div>
+    </section>
+    
+    <section class="how-to-play">
+        <h2>How to Play</h2>
+        <ol>
+            <li>You'll be shown an abstract from a research paper</li>
+            <li>Read the abstract carefully and look for clues about when it was published</li>
+            <li>Choose a date</li>
+            <li>Score points based on how close your guess is to the actual publication date</li>
+            <li>Play through 7 rounds and compete for the top spot on the leaderboard</li>
+        </ol>
+        
+        <p class="note">
+            <strong>Scoring:</strong> Error less than 6 months: 100 points, Error between 6 and 36 months: linear decrease from 100 to 0, Error more than 36 months: 0 points
+        </p>
+        
+        <p class="note">
+            {% if g.user %}
+            You're logged in as <strong>{{ g.user['username'] }}</strong>. Your high score will be saved!
+            {% else %}
+            <a href="{{ url_for('auth.login') }}">Log in</a> or <a href="{{ url_for('auth.register') }}">register</a> to save your high score!
+            {% endif %}
+        </p>
+    </section>
+</div>
+{% endblock %}

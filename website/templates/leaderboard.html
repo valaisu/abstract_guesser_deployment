@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Leaderboard{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="leaderboard">
+    <h2>Top Players</h2>
+    
+    {% if leaders %}
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Player</th>
+                <th>High Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in leaders %}
+            <tr {% if g.user and g.user['username'] == player['username'] %}class="current-user"{% endif %}>
+                <td>{{ loop.index }}</td>
+                <td>{{ player['username'] }}</td>
+                <td>{{ player['high_score'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="no-data">No scores yet! Be the first to play and get on the leaderboard.</p>
+    {% endif %}
+    
+    <div class="leaderboard-actions">
+        <a href="{{ url_for('game.game') }}" class="btn primary">Play Game</a>
+        {% if not g.user %}
+        <p class="note">
+            <a href="{{ url_for('auth.login') }}">Log in</a> or <a href="{{ url_for('auth.register') }}">register</a> to save your high score!
+        </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

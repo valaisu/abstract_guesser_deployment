@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Guess the Paper Date{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="game-container">
+    <div class="game-info">
+        <div class="score-display">
+            <span>Score: <span id="current-score">0</span></span>
+            <span>Round: <span id="current-round">1</span>/7</span>
+        </div>
+        
+        {% if g.user %}
+        <div class="player-info">
+            Playing as: <strong>{{ g.user['username'] }}</strong> | 
+            High Score: <span id="high-score">{{ g.user['high_score'] }}</span>
+        </div>
+        {% else %}
+        <div class="guest-info">
+            Playing as guest. <a href="{{ url_for('auth.login') }}">Log in</a> to save your high score!
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="game-area">
+        <div class="paper-info">
+            <h3>Read the abstract and guess when this paper was published:</h3>
+            <div id="paper-abstract" class="paper-abstract">
+                Loading paper...
+            </div>
+        </div>
+        
+        <div class="guess-area">
+            <div class="date-selection">
+                <label for="date-guess">Select publication date:</label>
+                <input type="date" id="date-guess" min="0001-01-01" max="{{ current_date }}">
+            </div>
+            <button id="submit-guess" class="btn primary">Submit Guess</button>
+        </div>
+        
+        <div id="result-feedback" class="result-feedback hidden">
+            <div class="result-details">
+                <p><strong>Your guess:</strong> <span id="user-guess-date"></span></p>
+                <p><strong>Actual date:</strong> <span id="actual-date"></span></p>
+                <p><strong>Difference:</strong> <span id="date-difference"></span></p>
+                <p><strong>Points earned:</strong> <span id="round-score"></span></p>
+            </div>
+            <button id="next-round" class="btn primary">Next Paper</button>
+        </div>
+    </div>
+    
+    <div id="game-over" class="game-over hidden">
+        <h2>Game Over!</h2>
+        <p>Your final score: <span id="final-score">0</span></p>
+        
+        <div class="round-breakdown">
+            <h3>Round Breakdown:</h3>
+            <ul id="round-scores-list">
+                <!-- Will be filled dynamically -->
+            </ul>
+        </div>
+        
+        <div class="game-over-actions">
+            <button id="play-again" class="btn primary">Play Again</button>
+            <a href="{{ url_for('leaderboard') }}" class="btn secondary">View Leaderboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Set today's date as max date for the date picker
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    document.getElementById('date-guess').max = formattedDate;
+</script>
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}
